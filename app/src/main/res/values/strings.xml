@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Story App</string>
+    <string name="hint_name">Masukkan nama</string>
+    <string name="hint_email">Masukkan email</string>
+    <string name="hint_password">Masukkan kata sandi</string>
+    <string name="action_register">Daftar</string>
+
+    <string name="title_dialog_error">Oops ada kesalahan</string>
+    <string name="error_empty_name">Nama Tidak Boleh Kosong</string>
+    <string name="error_empty_email">Email tidak boleh kosong!</string>
+    <string name="error_invalid_email">Email tidak valid!</string>
+    <string name="error_empty_password">Password tidak boleh kosong!</string>
+</resources>
