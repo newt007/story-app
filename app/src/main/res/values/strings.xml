@@ -10,4 +10,19 @@
     <string name="error_empty_email">Email tidak boleh kosong!</string>
     <string name="error_invalid_email">Email tidak valid!</string>
     <string name="error_empty_password">Password tidak boleh kosong!</string>
+    <string name="label_is_havent_account">Belum punya akun ?</string>
+    <string name="label_is_have_account">Sudah punya akun ?</string>
+    <string name="action_login">Masuk</string>
+    <string name="menu_home">Home</string>
+    <string name="menu_add">Add</string>
+    <string name="menu_profile">Profile</string>
+    <string name="label_email">Email</string>
+    <string name="label_password">Password</string>
+    <string name="label_welcome">Halo Story Writer</string>
+    <string name="label_login_welcome_desc">Silahkan login ke akun kamu supaya dapat fitur yang lengkap</string>
+    <string name="action_to_register">Daftar Disini</string>
+    <string name="label_register_welcome_desc">Daftarkan dirimu untuk menjadi Story Writer</string>
+    <string name="action_to_login">Masuk disini</string>
+    <string name="label_lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque lobortis nunc nec sodales consectetur. Sed eget auctor quam. Nulla facilisi. Etiam vitae nulla sed arcu varius tempus. Nullam ac diam ante. Donec condimentum cursus accumsan. Ut sit amet felis rutrum, posuere lorem sed</string>
+    <string name="label_greeting_user">Halo, %1$s!</string>
 </resources>

@@ -6,6 +6,7 @@ object ConstVal {
 
     const val KEY_TOKEN = "key.token"
     const val KEY_USER_ID = "key.user.id"
+    const val KEY_USER_NAME = "key.user.name"
     const val KEY_IS_LOGIN = "key.isLogin"
 
 }
