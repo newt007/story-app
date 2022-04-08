@@ -39,10 +39,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvGreetingName" />
 
-    <androidx.recyclerview.widget.RecyclerView
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:listitem="@layout/item_story"
-        app:layout_constraintTop_toBottomOf="@id/tvWelcome"/>
+        app:layout_constraintTop_toBottomOf="@id/tvWelcome">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvStories"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:listitem="@layout/item_story"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvWelcome"/>
+
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

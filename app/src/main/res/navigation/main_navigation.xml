@@ -59,4 +59,8 @@
         android:id="@+id/profileFragment"
         android:name="com.elapp.storyapp.presentation.profile.ProfileFragment"
         android:label="ProfileFragment" />
+    <fragment
+        android:id="@+id/addStoryFragment"
+        android:name="com.elapp.storyapp.presentation.story.add.AddStoryFragment"
+        android:label="AddStoryFragment" />
 </navigation>

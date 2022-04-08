@@ -7,6 +7,8 @@ import android.view.View
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.elapp.storyapp.databinding.ActivityMainBinding
+import com.elapp.storyapp.utils.ext.gone
+import com.elapp.storyapp.utils.ext.show
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -29,10 +31,10 @@ class MainActivity : AppCompatActivity() {
 
         binding.bottomNav.setupWithNavController(navControllerBottomBar)
         navControllerBottomBar.addOnDestinationChangedListener { _, destination, _ ->
-            if (destination.id == R.id.homeFragment || destination.id == R.id.homeFragment) {
-                binding.bottomNav.visibility = View.VISIBLE
+            if (destination.id == R.id.homeFragment || destination.id == R.id.homeFragment || destination.id == R.id.profileFragment || destination.id == R.id.addStoryFragment) {
+                binding.bottomNav.show()
             } else {
-                binding.bottomNav.visibility = View.GONE
+                binding.bottomNav.gone()
             }
         }
     }
