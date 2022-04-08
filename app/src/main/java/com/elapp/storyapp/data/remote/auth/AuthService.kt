@@ -12,7 +12,7 @@ interface AuthService {
 
     @POST("login")
     suspend fun loginUser(
-        @Body authBody: AuthBody
+        @Body loginBody: LoginBody
     ): AuthResponse
 
 }

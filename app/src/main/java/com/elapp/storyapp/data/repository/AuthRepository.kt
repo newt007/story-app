@@ -3,6 +3,7 @@ package com.elapp.storyapp.data.repository
 import com.elapp.storyapp.data.remote.ApiResponse
 import com.elapp.storyapp.data.remote.auth.AuthBody
 import com.elapp.storyapp.data.remote.auth.AuthResponse
+import com.elapp.storyapp.data.remote.auth.LoginBody
 import com.elapp.storyapp.data.source.AuthDataSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -17,8 +18,8 @@ class AuthRepository @Inject constructor(private val authDataSource: AuthDataSou
         return authDataSource.registerUser(authBody).flowOn(Dispatchers.IO)
     }
 
-    suspend fun loginUser(authBody: AuthBody): Flow<ApiResponse<AuthResponse>> {
-        return authDataSource.loginUser(authBody).flowOn(Dispatchers.IO)
+    suspend fun loginUser(loginBody: LoginBody): Flow<ApiResponse<AuthResponse>> {
+        return authDataSource.loginUser(loginBody).flowOn(Dispatchers.IO)
     }
 
 }

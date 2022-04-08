@@ -33,6 +33,6 @@ class SessionManager(context: Context) {
     }
 
     val getToken = prefs.getString(KEY_TOKEN, "")
-    val getUserId = prefs.getInt(KEY_USER_ID, 0)
+    val getUserId = prefs.getString(KEY_USER_ID, "")
     val isLogin = prefs.getBoolean(KEY_IS_LOGIN, false)
 }
