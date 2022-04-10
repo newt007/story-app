@@ -1,20 +1,16 @@
 package com.elapp.storyapp.presentation.register
 
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
+import androidx.activity.viewModels
 import com.elapp.storyapp.R
-import com.elapp.storyapp.R.string
 import com.elapp.storyapp.data.remote.ApiResponse
 import com.elapp.storyapp.data.remote.auth.AuthBody
-import com.elapp.storyapp.databinding.FragmentRegisterBinding
+import com.elapp.storyapp.databinding.ActivityRegisterBinding
+import com.elapp.storyapp.presentation.login.LoginActivity
 import com.elapp.storyapp.utils.UiConstValue
 import com.elapp.storyapp.utils.ext.isEmailValid
 import com.elapp.storyapp.utils.ext.showOKDialog
@@ -22,20 +18,18 @@ import com.elapp.storyapp.utils.ext.showToast
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class RegisterFragment: Fragment() {
+class RegisterActivity : AppCompatActivity() {
 
     private val registerViewModel: RegisterViewModel by viewModels()
 
-    private var _fragmentRegisterBinding: FragmentRegisterBinding? = null
-    private val binding get() = _fragmentRegisterBinding!!
+    private var _activityRegisterBinding: ActivityRegisterBinding? = null
+    private val binding get() = _activityRegisterBinding!!
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        _fragmentRegisterBinding = FragmentRegisterBinding.inflate(inflater)
-        return _fragmentRegisterBinding?.root
-    }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+        _activityRegisterBinding = ActivityRegisterBinding.inflate(layoutInflater)
+        setContentView(_activityRegisterBinding?.root)
 
         initAction()
     }
@@ -48,10 +42,10 @@ class RegisterFragment: Fragment() {
 
             Handler(Looper.getMainLooper()).postDelayed({
                 when {
-                    userName.isBlank() -> binding.edtName.error = getString(string.error_empty_name)
-                    userEmail.isBlank() -> binding.edtEmail.error = getString(string.error_empty_email)
-                    !userEmail.isEmailValid() -> binding.edtEmail.error = getString(string.error_invalid_email)
-                    userPassword.isBlank() -> binding.edtPassword.error = getString(string.error_empty_password)
+                    userName.isBlank() -> binding.edtName.error = getString(R.string.error_empty_name)
+                    userEmail.isBlank() -> binding.edtEmail.error = getString(R.string.error_empty_email)
+                    !userEmail.isEmailValid() -> binding.edtEmail.error = getString(R.string.error_invalid_email)
+                    userPassword.isBlank() -> binding.edtPassword.error = getString(R.string.error_empty_password)
                     else -> {
                         val request = AuthBody(
                             userName, userEmail, userPassword
@@ -62,31 +56,31 @@ class RegisterFragment: Fragment() {
             }, UiConstValue.ACTION_DELAYED_TIME)
         }
         binding.tvToLogin.setOnClickListener {
-            it.findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
+            LoginActivity.start(this)
         }
     }
 
     private fun registerUser(newUser: AuthBody) {
-        registerViewModel.registerUser(newUser).observe(viewLifecycleOwner) { response ->
+        registerViewModel.registerUser(newUser).observe(this) { response ->
             when(response) {
                 is ApiResponse.Loading -> {
                     showLoading(true)
-                    context?.showToast("Register Loading")
+                    showToast(getString(R.string.message_register_loading))
                 }
                 is ApiResponse.Success -> {
                     try {
                         showLoading(false)
-                        context?.showToast(response.data.message)
+                        showToast(response.data.message)
                     } finally {
-                        findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
+                        LoginActivity.start(this)
                     }
                 }
                 is ApiResponse.Error -> {
                     showLoading(false)
-                    context?.showOKDialog(getString(string.title_dialog_error), response.errorMessage)
+                    showOKDialog(getString(R.string.title_dialog_error), response.errorMessage)
                 }
                 else -> {
-                    context?.showToast("Unknown State")
+                    showToast(getString(R.string.message_unknown_state))
                 }
             }
         }
@@ -100,11 +94,6 @@ class RegisterFragment: Fragment() {
         binding.edtPassword.isClickable = !isLoading
         binding.edtPassword.isEnabled = !isLoading
         binding.btnRegister.isClickable = !isLoading
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _fragmentRegisterBinding = null
     }
 
 }

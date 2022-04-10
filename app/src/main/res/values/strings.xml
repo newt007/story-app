@@ -25,4 +25,10 @@
     <string name="action_to_login">Masuk disini</string>
     <string name="label_lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque lobortis nunc nec sodales consectetur. Sed eget auctor quam. Nulla facilisi. Etiam vitae nulla sed arcu varius tempus. Nullam ac diam ante. Donec condimentum cursus accumsan. Ut sit amet felis rutrum, posuere lorem sed</string>
     <string name="label_greeting_user">Halo, %1$s!</string>
+    <string name="message_success_take_picture">Berhasil mengambil gambar</string>
+    <string name="message_failed_take_picture">Gagal mengambil gambar</string>
+    <string name="message_unknown_state">Unknown State</string>
+    <string name="message_register_loading">Register Loading</string>
+    <string name="message_not_permitted">Tidak mendapatkan permission</string>
+    <string name="action_camera_x">Camera X</string>
 </resources>

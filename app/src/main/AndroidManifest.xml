@@ -2,18 +2,34 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.elapp.storyapp">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <uses-feature android:name="android.hardware.camera" />
+
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
+        android:name=".base.StoryApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:name=".base.StoryApplication"
         android:theme="@style/Theme.StoryApp">
         <activity
-            android:name=".MainActivity"
+            android:name=".presentation.story.detail.DetailStoryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".presentation.story.add.AddStoryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".presentation.profile.ProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".presentation.register.RegisterActivity"
+            android:exported="false" />
+        <activity
+            android:name=".presentation.splash.SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,6 +37,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".presentation.login.LoginActivity"
+            android:exported="false" />
+        <activity
+            android:name=".presentation.camera.CameraActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MainActivity"
+            android:exported="false" />
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />

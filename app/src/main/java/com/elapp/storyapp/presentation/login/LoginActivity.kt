@@ -1,29 +1,21 @@
 package com.elapp.storyapp.presentation.login
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
-import com.elapp.storyapp.R
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
+import com.elapp.storyapp.MainActivity
 import com.elapp.storyapp.R.string
 import com.elapp.storyapp.data.remote.ApiResponse
-import com.elapp.storyapp.data.remote.auth.AuthBody
 import com.elapp.storyapp.data.remote.auth.LoginBody
-import com.elapp.storyapp.databinding.FragmentLoginBinding
-import com.elapp.storyapp.utils.ConstVal.KEY_IS_LOGIN
-import com.elapp.storyapp.utils.ConstVal.KEY_TOKEN
-import com.elapp.storyapp.utils.ConstVal.KEY_USER_ID
-import com.elapp.storyapp.utils.ConstVal.KEY_USER_NAME
+import com.elapp.storyapp.databinding.ActivityLoginBinding
+import com.elapp.storyapp.utils.ConstVal
 import com.elapp.storyapp.utils.SessionManager
 import com.elapp.storyapp.utils.UiConstValue
 import com.elapp.storyapp.utils.ext.gone
-import com.elapp.storyapp.utils.ext.hide
 import com.elapp.storyapp.utils.ext.isEmailValid
 import com.elapp.storyapp.utils.ext.show
 import com.elapp.storyapp.utils.ext.showOKDialog
@@ -31,23 +23,28 @@ import com.elapp.storyapp.utils.ext.showToast
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class LoginFragment : Fragment() {
+class LoginActivity : AppCompatActivity() {
 
     private val loginViewModel: LoginViewModel by viewModels()
 
-    private var _fragmentLogin: FragmentLoginBinding? = null
-    private val binding get() = _fragmentLogin!!
+    private var _activityLoginBinding: ActivityLoginBinding? = null
+    private val binding get() = _activityLoginBinding!!
 
     private lateinit var pref: SessionManager
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        _fragmentLogin = FragmentLoginBinding.inflate(inflater)
-        return _fragmentLogin?.root
+    companion object {
+        fun start(context: Context) {
+            val intent = Intent(context, LoginActivity::class.java)
+            context.startActivity(intent)
+        }
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        pref = SessionManager(requireContext())
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        _activityLoginBinding = ActivityLoginBinding.inflate(layoutInflater)
+        setContentView(_activityLoginBinding?.root)
+
+        pref = SessionManager(this)
 
         initAction()
     }
@@ -72,38 +69,38 @@ class LoginFragment : Fragment() {
             }, UiConstValue.ACTION_DELAYED_TIME)
         }
         binding.tvToRegister.setOnClickListener {
-            it.findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
+
         }
     }
 
     private fun loginUser(loginBody: LoginBody) {
-        loginViewModel.loginUser(loginBody).observe(viewLifecycleOwner) { response ->
+        loginViewModel.loginUser(loginBody).observe(this) { response ->
             when (response) {
                 is ApiResponse.Loading -> {
                     showLoading(true)
-                    context?.showToast("Register Loading")
+                    showToast(getString(string.message_register_loading))
                 }
                 is ApiResponse.Success -> {
                     try {
                         showLoading(false)
                         val userData = response.data.loginResult
-                        context?.showToast(response.data.message)
+                        showToast(response.data.message)
                         pref.apply {
-                            setStringPreference(KEY_USER_ID, userData.userId)
-                            setStringPreference(KEY_TOKEN, userData.token)
-                            setStringPreference(KEY_USER_NAME, userData.name)
-                            setBooleanPreference(KEY_IS_LOGIN, true)
+                            setStringPreference(ConstVal.KEY_USER_ID, userData.userId)
+                            setStringPreference(ConstVal.KEY_TOKEN, userData.token)
+                            setStringPreference(ConstVal.KEY_USER_NAME, userData.name)
+                            setBooleanPreference(ConstVal.KEY_IS_LOGIN, true)
                         }
                     } finally {
-                        findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
+                        MainActivity.start(this)
                     }
                 }
                 is ApiResponse.Error -> {
                     showLoading(false)
-                    context?.showOKDialog(getString(R.string.title_dialog_error), response.errorMessage)
+                    showOKDialog(getString(string.title_dialog_error), response.errorMessage)
                 }
                 else -> {
-                    context?.showToast("Unknown State")
+                    showToast(getString(string.message_unknown_state))
                 }
             }
         }
