@@ -1,11 +1,10 @@
 package com.elapp.storyapp.presentation.splash
 
 import android.annotation.SuppressLint
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import androidx.navigation.fragment.findNavController
+import androidx.appcompat.app.AppCompatActivity
 import com.elapp.storyapp.MainActivity
 import com.elapp.storyapp.R
 import com.elapp.storyapp.presentation.login.LoginActivity

@@ -1,12 +1,14 @@
 package com.elapp.storyapp.presentation.register
 
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
 import androidx.activity.viewModels
-import com.elapp.storyapp.R
+import androidx.appcompat.app.AppCompatActivity
+import com.elapp.storyapp.R.string
 import com.elapp.storyapp.data.remote.ApiResponse
 import com.elapp.storyapp.data.remote.auth.AuthBody
 import com.elapp.storyapp.databinding.ActivityRegisterBinding
@@ -25,6 +27,13 @@ class RegisterActivity : AppCompatActivity() {
     private var _activityRegisterBinding: ActivityRegisterBinding? = null
     private val binding get() = _activityRegisterBinding!!
 
+    companion object {
+        fun start(context: Context) {
+            val intent = Intent(context, RegisterActivity::class.java)
+            context.startActivity(intent)
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -42,10 +51,10 @@ class RegisterActivity : AppCompatActivity() {
 
             Handler(Looper.getMainLooper()).postDelayed({
                 when {
-                    userName.isBlank() -> binding.edtName.error = getString(R.string.error_empty_name)
-                    userEmail.isBlank() -> binding.edtEmail.error = getString(R.string.error_empty_email)
-                    !userEmail.isEmailValid() -> binding.edtEmail.error = getString(R.string.error_invalid_email)
-                    userPassword.isBlank() -> binding.edtPassword.error = getString(R.string.error_empty_password)
+                    userName.isBlank() -> binding.edtName.error = getString(string.error_empty_name)
+                    userEmail.isBlank() -> binding.edtEmail.error = getString(string.error_empty_email)
+                    !userEmail.isEmailValid() -> binding.edtEmail.error = getString(string.error_invalid_email)
+                    userPassword.isBlank() -> binding.edtPassword.error = getString(string.error_empty_password)
                     else -> {
                         val request = AuthBody(
                             userName, userEmail, userPassword
@@ -65,22 +74,22 @@ class RegisterActivity : AppCompatActivity() {
             when(response) {
                 is ApiResponse.Loading -> {
                     showLoading(true)
-                    showToast(getString(R.string.message_register_loading))
                 }
                 is ApiResponse.Success -> {
                     try {
                         showLoading(false)
-                        showToast(response.data.message)
                     } finally {
                         LoginActivity.start(this)
+                        finish()
+                        showToast(getString(string.message_register_success))
                     }
                 }
                 is ApiResponse.Error -> {
                     showLoading(false)
-                    showOKDialog(getString(R.string.title_dialog_error), response.errorMessage)
+                    showOKDialog(getString(string.title_dialog_error), response.errorMessage)
                 }
                 else -> {
-                    showToast(getString(R.string.message_unknown_state))
+                    showToast(getString(string.message_unknown_state))
                 }
             }
         }
@@ -89,6 +98,8 @@ class RegisterActivity : AppCompatActivity() {
     private fun showLoading(isLoading: Boolean) {
         binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
         binding.bgDim.visibility = if (isLoading) View.VISIBLE else View.GONE
+        binding.edtName.isClickable = !isLoading
+        binding.edtName.isEnabled = !isLoading
         binding.edtEmail.isClickable = !isLoading
         binding.edtEmail.isEnabled = !isLoading
         binding.edtPassword.isClickable = !isLoading

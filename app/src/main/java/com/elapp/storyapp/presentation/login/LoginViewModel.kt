@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.elapp.storyapp.data.remote.ApiResponse
-import com.elapp.storyapp.data.remote.auth.AuthBody
 import com.elapp.storyapp.data.remote.auth.AuthResponse
 import com.elapp.storyapp.data.remote.auth.LoginBody
 import com.elapp.storyapp.data.repository.AuthRepository
@@ -13,7 +12,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.math.log
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(private val authRepository: AuthRepository): ViewModel() {

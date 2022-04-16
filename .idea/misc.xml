@@ -5,9 +5,12 @@
       <map>
         <entry key="..\:/Project/AndroidStudio/Bangkit/intermidiate-submission-1/app/src/main/res/drawable/bg_button.xml" value="0.125" />
         <entry key="..\:/Project/AndroidStudio/Bangkit/intermidiate-submission-1/app/src/main/res/drawable/bg_edit_text.xml" value="0.125" />
+        <entry key="..\:/Project/AndroidStudio/Bangkit/intermidiate-submission-1/app/src/main/res/drawable/ic_capture.xml" value="0.1" />
         <entry key="..\:/Project/AndroidStudio/Bangkit/intermidiate-submission-1/app/src/main/res/drawable/ic_home.xml" value="0.125" />
+        <entry key="..\:/Project/AndroidStudio/Bangkit/intermidiate-submission-1/app/src/main/res/drawable/ic_image.xml" value="0.1" />
         <entry key="..\:/Project/AndroidStudio/Bangkit/intermidiate-submission-1/app/src/main/res/drawable/ic_logo_story.xml" value="0.125" />
         <entry key="..\:/Project/AndroidStudio/Bangkit/intermidiate-submission-1/app/src/main/res/drawable/ic_profile.xml" value="0.125" />
+        <entry key="..\:/Project/AndroidStudio/Bangkit/intermidiate-submission-1/app/src/main/res/drawable/ic_setting.xml" value="0.123" />
         <entry key="..\:/Project/AndroidStudio/Bangkit/intermidiate-submission-1/app/src/main/res/layout/activity_add_story.xml" value="0.20520833333333333" />
         <entry key="..\:/Project/AndroidStudio/Bangkit/intermidiate-submission-1/app/src/main/res/layout/activity_camera.xml" value="0.20520833333333333" />
         <entry key="..\:/Project/AndroidStudio/Bangkit/intermidiate-submission-1/app/src/main/res/layout/activity_detail_story.xml" value="0.20520833333333333" />
@@ -22,8 +25,13 @@
         <entry key="..\:/Project/AndroidStudio/Bangkit/intermidiate-submission-1/app/src/main/res/layout/fragment_profile.xml" value="0.20520833333333333" />
         <entry key="..\:/Project/AndroidStudio/Bangkit/intermidiate-submission-1/app/src/main/res/layout/fragment_register.xml" value="0.22" />
         <entry key="..\:/Project/AndroidStudio/Bangkit/intermidiate-submission-1/app/src/main/res/layout/fragment_splash.xml" value="0.20520833333333333" />
-        <entry key="..\:/Project/AndroidStudio/Bangkit/intermidiate-submission-1/app/src/main/res/layout/item_story.xml" value="0.19074074074074074" />
+        <entry key="..\:/Project/AndroidStudio/Bangkit/intermidiate-submission-1/app/src/main/res/layout/item_story.xml" value="0.25" />
+        <entry key="..\:/Project/AndroidStudio/Bangkit/intermidiate-submission-1/app/src/main/res/layout/item_story_row.xml" value="0.2" />
+        <entry key="..\:/Project/AndroidStudio/Bangkit/intermidiate-submission-1/app/src/main/res/layout/shimmer_item_story.xml" value="0.22" />
+        <entry key="..\:/Project/AndroidStudio/Bangkit/intermidiate-submission-1/app/src/main/res/layout/story_image_widget.xml" value="0.13425925925925927" />
+        <entry key="..\:/Project/AndroidStudio/Bangkit/intermidiate-submission-1/app/src/main/res/layout/story_widget_item.xml" value="0.20520833333333333" />
         <entry key="..\:/Project/AndroidStudio/Bangkit/intermidiate-submission-1/app/src/main/res/menu/bottom_nav_menu.xml" value="0.20520833333333333" />
+        <entry key="..\:/Project/AndroidStudio/Bangkit/intermidiate-submission-1/app/src/main/res/menu/main_menu.xml" value="0.20520833333333333" />
       </map>
     </option>
   </component>

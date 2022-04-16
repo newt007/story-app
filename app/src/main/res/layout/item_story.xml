@@ -26,6 +26,8 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:textSize="@dimen/dimen_20sp"
+            android:maxLines="2"
+            android:ellipsize="end"
             style="@style/StoryTextContent.Title"/>
 
         <TextView

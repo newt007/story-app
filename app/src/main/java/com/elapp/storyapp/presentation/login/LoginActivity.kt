@@ -3,8 +3,6 @@ package com.elapp.storyapp.presentation.login
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.elapp.storyapp.MainActivity
@@ -12,11 +10,14 @@ import com.elapp.storyapp.R.string
 import com.elapp.storyapp.data.remote.ApiResponse
 import com.elapp.storyapp.data.remote.auth.LoginBody
 import com.elapp.storyapp.databinding.ActivityLoginBinding
-import com.elapp.storyapp.utils.ConstVal
+import com.elapp.storyapp.presentation.register.RegisterActivity
+import com.elapp.storyapp.utils.ConstVal.KEY_EMAIL
+import com.elapp.storyapp.utils.ConstVal.KEY_IS_LOGIN
+import com.elapp.storyapp.utils.ConstVal.KEY_TOKEN
+import com.elapp.storyapp.utils.ConstVal.KEY_USER_ID
+import com.elapp.storyapp.utils.ConstVal.KEY_USER_NAME
 import com.elapp.storyapp.utils.SessionManager
-import com.elapp.storyapp.utils.UiConstValue
 import com.elapp.storyapp.utils.ext.gone
-import com.elapp.storyapp.utils.ext.isEmailValid
 import com.elapp.storyapp.utils.ext.show
 import com.elapp.storyapp.utils.ext.showOKDialog
 import com.elapp.storyapp.utils.ext.showToast
@@ -33,6 +34,7 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var pref: SessionManager
 
     companion object {
+
         fun start(context: Context) {
             val intent = Intent(context, LoginActivity::class.java)
             context.startActivity(intent)
@@ -54,42 +56,45 @@ class LoginActivity : AppCompatActivity() {
             val userEmail = binding.edtEmail.text.toString()
             val userPassword = binding.edtPassword.text.toString()
 
-            Handler(Looper.getMainLooper()).postDelayed({
-                when {
-                    userEmail.isBlank() -> binding.edtEmail.error = getString(string.error_empty_email)
-                    !userEmail.isEmailValid() -> binding.edtEmail.error = getString(string.error_invalid_email)
-                    userPassword.isBlank() -> binding.edtPassword.error = getString(string.error_empty_password)
-                    else -> {
-                        val request = LoginBody(
-                            userEmail, userPassword
-                        )
-                        loginUser(request)
-                    }
+            when {
+                userEmail.isBlank() -> {
+                    binding.edtEmail.requestFocus()
+                    binding.edtEmail.error = getString(string.error_empty_password)
                 }
-            }, UiConstValue.ACTION_DELAYED_TIME)
+                userPassword.isBlank() -> {
+                    binding.edtPassword.requestFocus()
+                    binding.edtPassword.error = getString(string.error_empty_password)
+                }
+                else -> {
+                    val request = LoginBody(
+                        userEmail, userPassword
+                    )
+
+                    loginUser(request, userEmail)
+                }
+            }
         }
         binding.tvToRegister.setOnClickListener {
-
+            RegisterActivity.start(this)
         }
     }
 
-    private fun loginUser(loginBody: LoginBody) {
+    private fun loginUser(loginBody: LoginBody, email: String) {
         loginViewModel.loginUser(loginBody).observe(this) { response ->
             when (response) {
                 is ApiResponse.Loading -> {
                     showLoading(true)
-                    showToast(getString(string.message_register_loading))
                 }
                 is ApiResponse.Success -> {
                     try {
                         showLoading(false)
                         val userData = response.data.loginResult
-                        showToast(response.data.message)
                         pref.apply {
-                            setStringPreference(ConstVal.KEY_USER_ID, userData.userId)
-                            setStringPreference(ConstVal.KEY_TOKEN, userData.token)
-                            setStringPreference(ConstVal.KEY_USER_NAME, userData.name)
-                            setBooleanPreference(ConstVal.KEY_IS_LOGIN, true)
+                            setStringPreference(KEY_USER_ID, userData.userId)
+                            setStringPreference(KEY_TOKEN, userData.token)
+                            setStringPreference(KEY_USER_NAME, userData.name)
+                            setStringPreference(KEY_EMAIL, email)
+                            setBooleanPreference(KEY_IS_LOGIN, true)
                         }
                     } finally {
                         MainActivity.start(this)
@@ -97,7 +102,7 @@ class LoginActivity : AppCompatActivity() {
                 }
                 is ApiResponse.Error -> {
                     showLoading(false)
-                    showOKDialog(getString(string.title_dialog_error), response.errorMessage)
+                    showOKDialog(getString(string.title_dialog_error), getString(string.message_incorrect_auth))
                 }
                 else -> {
                     showToast(getString(string.message_unknown_state))
@@ -115,5 +120,4 @@ class LoginActivity : AppCompatActivity() {
         binding.edtPassword.isEnabled = !isLoading
         binding.btnLogin.isClickable = !isLoading
     }
-
 }
