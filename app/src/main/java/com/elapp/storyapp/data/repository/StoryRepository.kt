@@ -1,5 +1,7 @@
 package com.elapp.storyapp.data.repository
 
+import androidx.paging.PagingData
+import com.elapp.storyapp.data.model.Story
 import com.elapp.storyapp.data.remote.ApiResponse
 import com.elapp.storyapp.data.remote.story.AddStoriesResponse
 import com.elapp.storyapp.data.remote.story.GetStoriesResponse
@@ -15,12 +17,12 @@ import javax.inject.Singleton
 @Singleton
 class StoryRepository @Inject constructor(private val storyDataSource: StoryDataSource) {
 
-    suspend fun getAllStories(token: String): Flow<ApiResponse<GetStoriesResponse>> {
-        return storyDataSource.getAllStories(token).flowOn(Dispatchers.IO)
-    }
+    fun getAllStories(token: String): Flow<PagingData<Story>> = storyDataSource.getAllStories(token).flowOn(Dispatchers.IO)
+
+    suspend fun getStoriesWithLocation(token: String, location: Int): Flow<ApiResponse<GetStoriesResponse>> =
+        storyDataSource.getStoriesWithLocation(token, location).flowOn(Dispatchers.IO)
 
     suspend fun addNewStory(token: String, file: MultipartBody.Part, description: RequestBody): Flow<ApiResponse<AddStoriesResponse>> {
         return storyDataSource.addNewStory(token, file, description)
     }
-
 }

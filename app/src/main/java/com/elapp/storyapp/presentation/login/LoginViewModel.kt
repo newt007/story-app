@@ -9,6 +9,7 @@ import com.elapp.storyapp.data.remote.auth.AuthResponse
 import com.elapp.storyapp.data.remote.auth.LoginBody
 import com.elapp.storyapp.data.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -24,6 +25,10 @@ class LoginViewModel @Inject constructor(private val authRepository: AuthReposit
             }
         }
         return result
+    }
+
+    suspend fun userLogin(loginBody: LoginBody): Flow<ApiResponse<AuthResponse>> {
+        return authRepository.loginUser(loginBody)
     }
 
 }

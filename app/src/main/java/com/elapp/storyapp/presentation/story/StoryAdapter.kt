@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.util.Pair
+import androidx.paging.PagingDataAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.elapp.storyapp.data.model.Story
 import com.elapp.storyapp.databinding.ItemStoryRowBinding
@@ -14,7 +16,7 @@ import com.elapp.storyapp.utils.ConstVal
 import com.elapp.storyapp.utils.ext.setImageUrl
 import com.elapp.storyapp.utils.ext.timeStamptoString
 
-class StoryAdapter(private val storyList: List<Story>): RecyclerView.Adapter<StoryAdapter.StoryViewHolder>() {
+class StoryAdapter(): PagingDataAdapter<Story, StoryAdapter.StoryViewHolder>(DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StoryAdapter.StoryViewHolder {
         val binding = ItemStoryRowBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -22,12 +24,10 @@ class StoryAdapter(private val storyList: List<Story>): RecyclerView.Adapter<Sto
     }
 
     override fun onBindViewHolder(holder: StoryAdapter.StoryViewHolder, position: Int) {
-        storyList[position].let { story ->
+        getItem(position)?.let { story ->
             holder.bind(story)
         }
     }
-
-    override fun getItemCount(): Int = storyList.size
 
     inner class StoryViewHolder(private val binding: ItemStoryRowBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(story: Story) {
@@ -49,6 +49,18 @@ class StoryAdapter(private val storyList: List<Story>): RecyclerView.Adapter<Sto
                     Pair(binding.tvStoryDesc, "description"),
                     )
                 itemView.context.startActivity(intent, optionsCompat.toBundle())
+            }
+        }
+    }
+
+    companion object {
+        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Story>() {
+            override fun areItemsTheSame(oldItem: Story, newItem: Story): Boolean {
+                return oldItem == newItem
+            }
+
+            override fun areContentsTheSame(oldItem: Story, newItem: Story): Boolean {
+                return oldItem.id == newItem.id
             }
         }
     }

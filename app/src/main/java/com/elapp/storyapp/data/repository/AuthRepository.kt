@@ -4,6 +4,7 @@ import com.elapp.storyapp.data.remote.ApiResponse
 import com.elapp.storyapp.data.remote.auth.AuthBody
 import com.elapp.storyapp.data.remote.auth.AuthResponse
 import com.elapp.storyapp.data.remote.auth.LoginBody
+import com.elapp.storyapp.data.remote.auth.RegisterResponse
 import com.elapp.storyapp.data.source.AuthDataSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -15,7 +16,7 @@ import javax.inject.Singleton
 @Singleton
 class AuthRepository @Inject constructor(private val authDataSource: AuthDataSource) {
 
-    suspend fun registerUser(authBody: AuthBody): Flow<ApiResponse<Response<AuthResponse>>> {
+    suspend fun registerUser(authBody: AuthBody): Flow<ApiResponse<RegisterResponse>> {
         return authDataSource.registerUser(authBody).flowOn(Dispatchers.IO)
     }
 

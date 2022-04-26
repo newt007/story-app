@@ -22,4 +22,11 @@ object ConstVal {
     // Database
     const val DB_NAME = "storyApp_db"
 
+    // Paging config
+    const val INITIAL_PAGE_INDEX = 1
+    const val DEFAULT_PAGE_SIZE = 5
+
+    // API Config for testing purpose
+    var API_BASE_URL = "https://story-api.dicoding.dev/v1/"
+
 }

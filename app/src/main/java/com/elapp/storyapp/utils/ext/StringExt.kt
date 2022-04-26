@@ -7,3 +7,7 @@ fun String.isEmailValid(): Boolean  {
 }
 
 fun String.timeStamptoString(): String = substring(0, 10)
+
+fun String.toBearerToken(): String {
+    return "Bearer $this"
+}

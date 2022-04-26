@@ -22,7 +22,7 @@ internal class StackRemoteViewsFactory(private val context: Context) : RemoteVie
             context.applicationContext, StoryAppDatabase::class.java,
             DB_NAME
         ).build()
-        database.getStoryDao().getAllStories().forEach {
+        database.getStoryDao().getStories().forEach {
             stories.add(
                 StoryEntity(
                     it.id,

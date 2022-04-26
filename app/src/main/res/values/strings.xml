@@ -47,4 +47,8 @@
     <string name="message_register_success">Register Success</string>
     <string name="message_pick_image">Pick an image</string>
     <string name="error_desc_empty">Description can\'t empty</string>
+    <string name="title_activity_story_map">StoryMapActivity</string>
+    <string name="menu_maps">Maps</string>
+    <string name="title_story_maps">Story Maps</string>
+    <string name="message_loading_map">Loading map....</string>
 </resources>

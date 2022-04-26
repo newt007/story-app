@@ -1,11 +1,16 @@
 package com.elapp.storyapp.data.source
 
-import com.elapp.storyapp.data.local.dao.StoryDao
-import com.elapp.storyapp.data.mapper.storyToStoryEntity
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import com.elapp.storyapp.data.local.StoryAppDatabase
+import com.elapp.storyapp.data.model.Story
 import com.elapp.storyapp.data.remote.ApiResponse
 import com.elapp.storyapp.data.remote.story.AddStoriesResponse
 import com.elapp.storyapp.data.remote.story.GetStoriesResponse
 import com.elapp.storyapp.data.remote.story.StoryService
+import com.elapp.storyapp.data.source.factory.StoryPagingFactory
+import com.elapp.storyapp.utils.ConstVal.DEFAULT_PAGE_SIZE
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import okhttp3.MultipartBody
@@ -15,21 +20,24 @@ import javax.inject.Singleton
 
 @Singleton
 class StoryDataSource @Inject constructor(
-    private val storyDao: StoryDao,
     private val storyService: StoryService
 ) {
 
-    suspend fun getAllStories(token: String): Flow<ApiResponse<GetStoriesResponse>> {
+    fun getAllStories(token: String): Flow<PagingData<Story>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = DEFAULT_PAGE_SIZE
+            ),
+            pagingSourceFactory = { StoryPagingFactory(storyService, token) }
+        ).flow
+    }
+
+    suspend fun getStoriesWithLocation(token: String, location: Int): Flow<ApiResponse<GetStoriesResponse>> {
         return flow {
             try {
                 emit(ApiResponse.Loading)
-                val response = storyService.getAllStories(token)
+                val response = storyService.getAllStories(token, location)
                 if (!response.error) {
-                    storyDao.deleteAllStories()
-                    val storyList = response.listStory.map {
-                        storyToStoryEntity(it)
-                    }
-                    storyDao.insertStories(storyList)
                     emit(ApiResponse.Success(response))
                 } else {
                     emit(ApiResponse.Error(response.message))

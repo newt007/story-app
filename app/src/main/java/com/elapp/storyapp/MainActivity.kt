@@ -6,18 +6,21 @@ import android.os.Bundle
 import android.provider.Settings
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.elapp.storyapp.R.string
-import com.elapp.storyapp.data.remote.ApiResponse
 import com.elapp.storyapp.databinding.ActivityMainBinding
 import com.elapp.storyapp.presentation.profile.ProfileActivity
 import com.elapp.storyapp.presentation.story.StoryAdapter
 import com.elapp.storyapp.presentation.story.StoryViewModel
 import com.elapp.storyapp.presentation.story.add.AddStoryActivity
+import com.elapp.storyapp.presentation.story.map.StoryMapActivity
 import com.elapp.storyapp.utils.SessionManager
+import com.elapp.storyapp.utils.ext.gone
+import com.elapp.storyapp.utils.ext.hide
+import com.elapp.storyapp.utils.ext.show
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
@@ -31,6 +34,8 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var pref: SessionManager
     private var token: String? = null
+
+    private lateinit var adapter: StoryAdapter
 
     companion object {
 
@@ -49,6 +54,7 @@ class MainActivity : AppCompatActivity() {
 
         initAction()
         initUI()
+        initAdapter()
 
         getAllStories("Bearer $token")
     }
@@ -68,15 +74,18 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getAllStories(token: String) {
-        storyViewModel.getAllStories(token).observe(this) { response ->
-            when (response) {
-                is ApiResponse.Loading -> isLoading(true)
-                is ApiResponse.Success -> {
-                    isLoading(false)
-                    val adapter = StoryAdapter(response.data.listStory)
-                    binding.rvStories.adapter = adapter
-                }
-                is ApiResponse.Error -> isLoading(false)
+        storyViewModel.getAllStories(token).observe(this@MainActivity) { stories ->
+            adapter.submitData(lifecycle ,stories)
+        }
+    }
+
+    private fun initAdapter() {
+        adapter = StoryAdapter()
+        binding.rvStories.adapter = adapter
+        adapter.addLoadStateListener { loadState ->
+            when (loadState.refresh) {
+                is LoadState.Loading -> isLoading(true)
+                is LoadState.NotLoading -> isLoading(false)
                 else -> {
                     Timber.e(getString(string.message_unknown_state))
                 }
@@ -87,15 +96,15 @@ class MainActivity : AppCompatActivity() {
     private fun isLoading(loading: Boolean) {
         if (loading) {
             binding.apply {
-                shimmerLoading.visibility = View.VISIBLE
+                shimmerLoading.show()
                 shimmerLoading.startShimmer()
-                rvStories.visibility = View.INVISIBLE
+                rvStories.hide()
             }
         } else {
             binding.apply {
-                rvStories.visibility = View.VISIBLE
+                rvStories.show()
                 shimmerLoading.stopShimmer()
-                shimmerLoading.visibility = View.INVISIBLE
+                shimmerLoading.gone()
             }
         }
     }
@@ -111,12 +120,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId) {
+        when (item.itemId) {
             R.id.menuSetting -> {
                 startActivity(Intent(Settings.ACTION_LOCALE_SETTINGS))
+            }
+            R.id.menuMap -> {
+                StoryMapActivity.start(this)
             }
         }
         return super.onOptionsItemSelected(item)
     }
-
 }

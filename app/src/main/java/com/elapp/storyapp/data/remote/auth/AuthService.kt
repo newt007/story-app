@@ -9,7 +9,7 @@ interface AuthService {
     @POST("register")
     suspend fun registerUser(
         @Body authBody: AuthBody
-    ): Response<AuthResponse>
+    ): RegisterResponse
 
     @POST("login")
     suspend fun loginUser(
