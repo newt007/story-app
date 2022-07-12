@@ -5,12 +5,14 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
+import androidx.paging.ExperimentalPagingApi
 import com.elapp.storyapp.MainActivity
 import com.elapp.storyapp.R
 import com.elapp.storyapp.presentation.login.LoginActivity
 import com.elapp.storyapp.utils.SessionManager
 import com.elapp.storyapp.utils.UiConstValue
 
+@ExperimentalPagingApi
 @SuppressLint("CustomSplashScreen")
 class SplashActivity : AppCompatActivity() {
 

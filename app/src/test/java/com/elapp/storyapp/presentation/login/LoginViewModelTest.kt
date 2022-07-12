@@ -7,7 +7,6 @@ import com.elapp.storyapp.data.repository.AuthRepository
 import com.elapp.storyapp.utils.CoroutinesTestRule
 import com.elapp.storyapp.utils.DataDummy
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runBlockingTest

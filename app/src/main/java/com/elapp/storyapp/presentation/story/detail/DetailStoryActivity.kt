@@ -2,20 +2,20 @@ package com.elapp.storyapp.presentation.story.detail
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.content.res.AppCompatResources
+import com.elapp.storyapp.R
 import com.elapp.storyapp.R.string
-import com.elapp.storyapp.data.model.Story
+import com.elapp.storyapp.data.local.entity.StoryEntity
 import com.elapp.storyapp.databinding.ActivityDetailStoryBinding
 import com.elapp.storyapp.utils.ConstVal
 import com.elapp.storyapp.utils.ext.setImageUrl
-import dagger.hilt.android.AndroidEntryPoint
 
-@AndroidEntryPoint
 class DetailStoryActivity : AppCompatActivity() {
 
     private var _activityDetailStoryBinding: ActivityDetailStoryBinding? = null
     private val binding get() = _activityDetailStoryBinding!!
 
-    private lateinit var story: Story
+    private lateinit var story: StoryEntity
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,6 +24,7 @@ class DetailStoryActivity : AppCompatActivity() {
 
         initIntent()
         initUI()
+        initToolbar()
     }
 
     private fun initUI() {
@@ -38,6 +39,14 @@ class DetailStoryActivity : AppCompatActivity() {
 
     private fun initIntent() {
         story = intent.getParcelableExtra(ConstVal.BUNDLE_KEY_STORY)!!
+    }
+
+    private fun initToolbar() {
+        binding.detailToolbar.apply {
+            navigationIcon = AppCompatResources.getDrawable(context, R.drawable.ic_arrow_back)
+        }
+        setSupportActionBar(binding.detailToolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
     override fun onSupportNavigateUp(): Boolean {

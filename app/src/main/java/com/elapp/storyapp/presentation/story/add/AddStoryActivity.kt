@@ -6,13 +6,18 @@ import android.content.Intent
 import android.content.Intent.ACTION_GET_CONTENT
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
+import android.location.Location
 import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.paging.ExperimentalPagingApi
+import com.elapp.storyapp.R
 import com.elapp.storyapp.R.string
 import com.elapp.storyapp.data.remote.ApiResponse
 import com.elapp.storyapp.databinding.ActivityAddStoryBinding
@@ -28,14 +33,19 @@ import com.elapp.storyapp.utils.ext.showOKDialog
 import com.elapp.storyapp.utils.ext.showToast
 import com.elapp.storyapp.utils.reduceFileImage
 import com.elapp.storyapp.utils.uriToFile
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 
+@ExperimentalPagingApi
 @AndroidEntryPoint
 class AddStoryActivity : AppCompatActivity() {
 
@@ -46,16 +56,21 @@ class AddStoryActivity : AppCompatActivity() {
 
     private var uploadFile: File? = null
     private var token: String? = null
+    private var currentLocation: Location? = null
+
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     private lateinit var pref: SessionManager
 
     companion object {
+
         fun start(context: Context) {
             val intent = Intent(context, AddStoryActivity::class.java)
             context.startActivity(intent)
         }
 
-        private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
+        private val REQUIRED_PERMISSIONS =
+            arrayOf(Manifest.permission.CAMERA)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,6 +80,7 @@ class AddStoryActivity : AppCompatActivity() {
 
         pref = SessionManager(this)
         token = pref.getToken
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         if (!allPermissionsGranted()) {
             ActivityCompat.requestPermissions(
@@ -75,7 +91,72 @@ class AddStoryActivity : AppCompatActivity() {
         }
 
         initUI()
+        initToolbar()
         initAction()
+    }
+
+    private val requestPermissionLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.RequestMultiplePermissions()
+        ) { permissions ->
+            when {
+                permissions[Manifest.permission.ACCESS_FINE_LOCATION] ?: false -> {
+                    getMyLastLocation()
+                }
+                permissions[Manifest.permission.ACCESS_COARSE_LOCATION] ?: false -> {
+                    getMyLastLocation()
+                }
+                else -> {
+                    Snackbar
+                        .make(
+                            binding.root,
+                            getString(string.message_location_not_found),
+                            Snackbar.LENGTH_SHORT
+                        )
+                        .setActionTextColor(ContextCompat.getColor(this, R.color.white))
+                        .setAction(getString(string.action_change_setting)) {
+                            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                            val uri = Uri.fromParts("package", packageName, null)
+                            intent.data = uri
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            startActivity(intent)
+                        }
+                        .show()
+
+                    binding.cbShareLocation.isChecked = false
+                }
+            }
+        }
+
+    private fun checkPermission(permission: String): Boolean {
+        return ContextCompat.checkSelfPermission(
+            this,
+            permission
+        ) == PackageManager.PERMISSION_GRANTED
+    }
+
+    private fun getMyLastLocation() {
+        if (checkPermission(Manifest.permission.ACCESS_FINE_LOCATION) &&
+            checkPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
+        ) {
+            fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
+                if (location != null) {
+                    currentLocation = location
+                    showToast("Location ${currentLocation!!.longitude} ${currentLocation!!.latitude}")
+                } else {
+                    showToast(getString(string.message_location_not_found))
+
+                    binding.cbShareLocation.isChecked = false
+                }
+            }
+        } else {
+            requestPermissionLauncher.launch(
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                )
+            )
+        }
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -87,6 +168,14 @@ class AddStoryActivity : AppCompatActivity() {
 
     private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
         ContextCompat.checkSelfPermission(baseContext, it) == PackageManager.PERMISSION_GRANTED
+    }
+
+    private fun initToolbar() {
+        binding.toolbar.apply {
+            navigationIcon = AppCompatResources.getDrawable(context, R.drawable.ic_arrow_back)
+        }
+        setSupportActionBar(binding.toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
     private fun initAction() {
@@ -103,6 +192,13 @@ class AddStoryActivity : AppCompatActivity() {
         }
         binding.btnUpload.setOnClickListener {
             uploadImage()
+        }
+        binding.cbShareLocation.setOnCheckedChangeListener { _, checked ->
+            if (checked) {
+                getMyLastLocation()
+            } else {
+                currentLocation = null
+            }
         }
     }
 
@@ -152,8 +248,17 @@ class AddStoryActivity : AppCompatActivity() {
                     file.name,
                     requestImageFile
                 )
-                storyViewModel.addNewStory("Bearer $token", imageMultipart, descMediaTyped).observe(this) { response ->
-                    when(response) {
+
+                var latitude: RequestBody? = null
+                var longitude: RequestBody? = null
+
+                if (currentLocation != null) {
+                    longitude = currentLocation?.longitude.toString().toRequestBody("text/plain".toMediaType())
+                    latitude = currentLocation?.latitude.toString().toRequestBody("text/plain".toMediaType())
+                }
+
+                storyViewModel.addNewStory("Bearer $token", imageMultipart, descMediaTyped, latitude, longitude).observe(this) { response ->
+                    when (response) {
                         is ApiResponse.Loading -> {
                             showLoading(true)
                         }
@@ -195,5 +300,4 @@ class AddStoryActivity : AppCompatActivity() {
         onBackPressed()
         return super.onSupportNavigateUp()
     }
-
 }

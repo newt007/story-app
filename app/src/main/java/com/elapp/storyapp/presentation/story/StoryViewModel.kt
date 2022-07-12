@@ -5,21 +5,21 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import androidx.paging.ExperimentalPagingApi
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.elapp.storyapp.data.model.Story
+import com.elapp.storyapp.data.local.entity.StoryEntity
 import com.elapp.storyapp.data.remote.ApiResponse
 import com.elapp.storyapp.data.remote.story.AddStoriesResponse
 import com.elapp.storyapp.data.remote.story.GetStoriesResponse
 import com.elapp.storyapp.data.repository.StoryRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import javax.inject.Inject
 
+@ExperimentalPagingApi
 @HiltViewModel
 class StoryViewModel @Inject constructor(private val storyRepository: StoryRepository): ViewModel() {
 
@@ -33,12 +33,13 @@ class StoryViewModel @Inject constructor(private val storyRepository: StoryRepos
         return result
     }
 
-    fun getAllStories(token: String): LiveData<PagingData<Story>> = storyRepository.getAllStories(token).cachedIn(viewModelScope).asLiveData()
+    fun getAllStories(token: String): LiveData<PagingData<StoryEntity>> =
+        storyRepository.getAllStories(token).cachedIn(viewModelScope).asLiveData()
 
-    fun addNewStory(token: String, file: MultipartBody.Part, description: RequestBody): LiveData<ApiResponse<AddStoriesResponse>> {
+    fun addNewStory(token: String, file: MultipartBody.Part, description: RequestBody, lat: RequestBody?, lon: RequestBody?): LiveData<ApiResponse<AddStoriesResponse>> {
         val result = MutableLiveData<ApiResponse<AddStoriesResponse>>()
         viewModelScope.launch {
-            storyRepository.addNewStory(token, file, description).collect {
+            storyRepository.addNewStory(token, file, description, lat, lon).collect {
                 result.postValue(it)
             }
         }

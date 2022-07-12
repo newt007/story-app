@@ -3,92 +3,11 @@
   "message": "Stories fetched successfully",
   "listStory": [
     {
-      "id": "story-amFNFsrma4XqD4ty",
-      "name": "admin",
-      "description": "hahaha",
-      "photoUrl": "https://story-api.dicoding.dev/images/stories/photos-1650859716919_KXYqWGqG.png",
-      "createdAt": "2022-04-25T04:08:36.920Z",
-      "lat": null,
-      "lon": null
-    },
-    {
-      "id": "story-NUWFIosnEFcSVC_1",
-      "name": "admin",
-      "description": "hsjzjz",
-      "photoUrl": "https://story-api.dicoding.dev/images/stories/photos-1650859624736_pAyGTW62.png",
-      "createdAt": "2022-04-25T04:07:04.737Z",
-      "lat": null,
-      "lon": null
-    },
-    {
       "id": "story--V2dkRg1bnJMjyh0",
       "name": "Bintang",
-      "description": "kotlin",
+      "description": "lorem ipsum dolor si amet",
       "photoUrl": "https://story-api.dicoding.dev/images/stories/photos-1650859553161_po51cvWm.jpg",
       "createdAt": "2022-04-25T04:05:53.163Z",
-      "lat": null,
-      "lon": null
-    },
-    {
-      "id": "story-xAEICA09bqgAxTmj",
-      "name": "reviewer",
-      "description": "review",
-      "photoUrl": "https://story-api.dicoding.dev/images/stories/photos-1650859473223_AiZkDNyK.jpg",
-      "createdAt": "2022-04-25T04:04:33.224Z",
-      "lat": null,
-      "lon": null
-    },
-    {
-      "id": "story-gGwmw5x6LUsLuuFI",
-      "name": "Arif",
-      "description": "aa",
-      "photoUrl": "https://story-api.dicoding.dev/images/stories/photos-1650859338817_dWn3h5wc.jpg",
-      "createdAt": "2022-04-25T04:02:18.818Z",
-      "lat": null,
-      "lon": null
-    },
-    {
-      "id": "story-ImaHWHfeSi6v9BSQ",
-      "name": "bambang",
-      "description": "cek bebi cek",
-      "photoUrl": "https://story-api.dicoding.dev/images/stories/photos-1650858926962__qm50izX.jpg",
-      "createdAt": "2022-04-25T03:55:26.965Z",
-      "lat": 37.4273159,
-      "lon": -122.1678443
-    },
-    {
-      "id": "story-2cECeSx0kJAPYmhc",
-      "name": "admin",
-      "description": "coba",
-      "photoUrl": "https://story-api.dicoding.dev/images/stories/photos-1650858713732_h9aWsGLP.jpg",
-      "createdAt": "2022-04-25T03:51:53.734Z",
-      "lat": null,
-      "lon": null
-    },
-    {
-      "id": "story-kTvcfVIrMb2EkkHJ",
-      "name": "reviewer",
-      "description": "review",
-      "photoUrl": "https://story-api.dicoding.dev/images/stories/photos-1650858677395_4PDJBNFF.jpg",
-      "createdAt": "2022-04-25T03:51:17.396Z",
-      "lat": null,
-      "lon": null
-    },
-    {
-      "id": "story-vlVceuxz2IIyRZUj",
-      "name": "admin",
-      "description": "coba lagi",
-      "photoUrl": "https://story-api.dicoding.dev/images/stories/photos-1650858558385_rBQ1ppvC.jpg",
-      "createdAt": "2022-04-25T03:49:18.388Z",
-      "lat": null,
-      "lon": null
-    },
-    {
-      "id": "story-DvGFFaSRvsfbFUMG",
-      "name": "Nama Saya",
-      "description": "TEST LAGI YA, NUMPANG",
-      "photoUrl": "https://story-api.dicoding.dev/images/stories/photos-1650858410444_am8caXtI.jpg",
-      "createdAt": "2022-04-25T03:46:50.445Z",
       "lat": null,
       "lon": null
     }

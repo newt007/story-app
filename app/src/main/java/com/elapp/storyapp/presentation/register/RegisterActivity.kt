@@ -8,6 +8,8 @@ import android.os.Looper
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
+import androidx.paging.ExperimentalPagingApi
 import com.elapp.storyapp.R.string
 import com.elapp.storyapp.data.remote.ApiResponse
 import com.elapp.storyapp.data.remote.auth.AuthBody
@@ -18,7 +20,9 @@ import com.elapp.storyapp.utils.ext.isEmailValid
 import com.elapp.storyapp.utils.ext.showOKDialog
 import com.elapp.storyapp.utils.ext.showToast
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
+@ExperimentalPagingApi
 @AndroidEntryPoint
 class RegisterActivity : AppCompatActivity() {
 
@@ -70,26 +74,28 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun registerUser(newUser: AuthBody) {
-        registerViewModel.registerUser(newUser).observe(this) { response ->
-            when(response) {
-                is ApiResponse.Loading -> {
-                    showLoading(true)
-                }
-                is ApiResponse.Success -> {
-                    try {
-                        showLoading(false)
-                    } finally {
-                        LoginActivity.start(this)
-                        finish()
-                        showToast(getString(string.message_register_success))
+        lifecycleScope.launch {
+            registerViewModel.userRegister(newUser).collect { response ->
+                when(response) {
+                    is ApiResponse.Loading -> {
+                        showLoading(true)
                     }
-                }
-                is ApiResponse.Error -> {
-                    showLoading(false)
-                    showOKDialog(getString(string.title_dialog_error), response.errorMessage)
-                }
-                else -> {
-                    showToast(getString(string.message_unknown_state))
+                    is ApiResponse.Success -> {
+                        try {
+                            showLoading(false)
+                        } finally {
+                            LoginActivity.start(this@RegisterActivity)
+                            finish()
+                            showToast(getString(string.message_register_success))
+                        }
+                    }
+                    is ApiResponse.Error -> {
+                        showLoading(false)
+                        showOKDialog(getString(string.title_dialog_error), getString(string.message_register_failed))
+                    }
+                    else -> {
+                        showToast(getString(string.message_unknown_state))
+                    }
                 }
             }
         }

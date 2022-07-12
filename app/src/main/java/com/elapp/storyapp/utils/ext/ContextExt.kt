@@ -8,7 +8,7 @@ fun Context.showToast(message: String) {
     Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
 }
 
-fun Context.showOKDialog(title: String, message: String){
+fun Context.showOKDialog(title: String, message: String) {
     AlertDialog.Builder(this).apply {
         setTitle(title)
         setMessage(message)

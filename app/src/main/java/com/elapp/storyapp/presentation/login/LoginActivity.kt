@@ -5,6 +5,8 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
+import androidx.paging.ExperimentalPagingApi
 import com.elapp.storyapp.MainActivity
 import com.elapp.storyapp.R.string
 import com.elapp.storyapp.data.remote.ApiResponse
@@ -22,7 +24,9 @@ import com.elapp.storyapp.utils.ext.show
 import com.elapp.storyapp.utils.ext.showOKDialog
 import com.elapp.storyapp.utils.ext.showToast
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
+@ExperimentalPagingApi
 @AndroidEntryPoint
 class LoginActivity : AppCompatActivity() {
 
@@ -80,32 +84,37 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun loginUser(loginBody: LoginBody, email: String) {
-        loginViewModel.loginUser(loginBody).observe(this) { response ->
-            when (response) {
-                is ApiResponse.Loading -> {
-                    showLoading(true)
-                }
-                is ApiResponse.Success -> {
-                    try {
-                        showLoading(false)
-                        val userData = response.data.loginResult
-                        pref.apply {
-                            setStringPreference(KEY_USER_ID, userData.userId)
-                            setStringPreference(KEY_TOKEN, userData.token)
-                            setStringPreference(KEY_USER_NAME, userData.name)
-                            setStringPreference(KEY_EMAIL, email)
-                            setBooleanPreference(KEY_IS_LOGIN, true)
-                        }
-                    } finally {
-                        MainActivity.start(this)
+        lifecycleScope.launch {
+            loginViewModel.userLogin(loginBody).collect { response ->
+                when (response) {
+                    is ApiResponse.Loading -> {
+                        showLoading(true)
                     }
-                }
-                is ApiResponse.Error -> {
-                    showLoading(false)
-                    showOKDialog(getString(string.title_dialog_error), getString(string.message_incorrect_auth))
-                }
-                else -> {
-                    showToast(getString(string.message_unknown_state))
+                    is ApiResponse.Success -> {
+                        try {
+                            showLoading(false)
+                            val userData = response.data.loginResult
+                            pref.apply {
+                                setStringPreference(KEY_USER_ID, userData.userId)
+                                setStringPreference(KEY_TOKEN, userData.token)
+                                setStringPreference(KEY_USER_NAME, userData.name)
+                                setStringPreference(KEY_EMAIL, email)
+                                setBooleanPreference(KEY_IS_LOGIN, true)
+                            }
+                        } finally {
+                            val intent = Intent(this@LoginActivity, MainActivity::class.java)
+                            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                            startActivity(intent)
+                            finish()
+                        }
+                    }
+                    is ApiResponse.Error -> {
+                        showLoading(false)
+                        showOKDialog(getString(string.title_dialog_error), getString(string.message_incorrect_auth))
+                    }
+                    else -> {
+                        showToast(getString(string.message_unknown_state))
+                    }
                 }
             }
         }

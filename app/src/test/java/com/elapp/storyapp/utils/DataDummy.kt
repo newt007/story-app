@@ -1,5 +1,6 @@
 package com.elapp.storyapp.utils
 
+import com.elapp.storyapp.data.local.entity.StoryEntity
 import com.elapp.storyapp.data.model.Story
 import com.elapp.storyapp.data.model.User
 import com.elapp.storyapp.data.remote.auth.AuthBody
@@ -11,7 +12,6 @@ import com.elapp.storyapp.data.remote.story.GetStoriesResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
-import retrofit2.Response
 
 object DataDummy {
 
@@ -51,10 +51,10 @@ object DataDummy {
         )
     }
 
-    fun listStoryDummy(): List<Story> {
-        val items = arrayListOf<Story>()
+    fun listStoryDummy(): List<StoryEntity> {
+        val items = arrayListOf<StoryEntity>()
         for (i in 0 until 10) {
-            val story = Story(
+            val story = StoryEntity(
                 id = "story-FvU4u0Vp2S3PMsFg",
                 photoUrl = "https://story-api.dicoding.dev/images/stories/photos-1641623658595_dummy-pic.png",
                 createdAt = "2022-01-08T06:34:18.598Z",

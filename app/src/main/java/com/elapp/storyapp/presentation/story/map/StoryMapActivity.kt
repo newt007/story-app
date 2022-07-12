@@ -2,9 +2,11 @@ package com.elapp.storyapp.presentation.story.map
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.Resources
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.paging.ExperimentalPagingApi
 import com.elapp.storyapp.R
 import com.elapp.storyapp.R.string
 import com.elapp.storyapp.data.remote.ApiResponse.Error
@@ -19,10 +21,12 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
+@ExperimentalPagingApi
 @AndroidEntryPoint
 class StoryMapActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -36,7 +40,6 @@ class StoryMapActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var pref: SessionManager
 
     companion object {
-
         fun start(context: Context) {
             val intent = Intent(context, StoryMapActivity::class.java)
             context.startActivity(intent)
@@ -66,6 +69,8 @@ class StoryMapActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
 
+        setMapStyle()
+
         storyViewModel.getStoriesWithLocation(token, 1).observe(this) { response ->
             when (response) {
                 is Success -> {
@@ -86,4 +91,17 @@ class StoryMapActivity : AppCompatActivity(), OnMapReadyCallback {
         onBackPressed()
         return super.onSupportNavigateUp()
     }
+
+    private fun setMapStyle() {
+        try {
+            val success =
+                mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style))
+            if (!success) {
+                Timber.e(getString(string.error_style_parsing))
+            }
+        } catch (exception: Resources.NotFoundException) {
+            Timber.e(getString(string.error_cant_find_style), exception)
+        }
+    }
+
 }

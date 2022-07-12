@@ -5,11 +5,13 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.paging.ExperimentalPagingApi
 import com.elapp.storyapp.R.string
 import com.elapp.storyapp.databinding.ActivityProfileBinding
 import com.elapp.storyapp.presentation.login.LoginActivity
 import com.elapp.storyapp.utils.SessionManager
 
+@ExperimentalPagingApi
 class ProfileActivity : AppCompatActivity() {
 
     private var _activityProfileBinding: ActivityProfileBinding? = null
@@ -55,9 +57,9 @@ class ProfileActivity : AppCompatActivity() {
             ?.setPositiveButton(getString(string.action_yes)) { _, _ ->
                 pref.clearPreferences()
                 val intent = Intent(this, LoginActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intent)
-                finish()
+                this.finish()
             }
             ?.setNegativeButton(getString(string.action_cancel), null)
         val alert = alertDialog.create()

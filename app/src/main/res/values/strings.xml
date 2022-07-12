@@ -51,4 +51,12 @@
     <string name="menu_maps">Maps</string>
     <string name="title_story_maps">Story Maps</string>
     <string name="message_loading_map">Loading map....</string>
+    <string name="message_register_failed">Registration failed, try again later</string>
+    <string name="error_style_parsing">Style parsing failed.</string>
+    <string name="error_cant_find_style">\"Can\'t find style. Error: \"</string>
+    <string name="message_error_stories">Stories not found</string>
+    <string name="action_retry">Retry</string>
+    <string name="message_location_not_found">Location is not found. Try again</string>
+    <string name="label_share_location">Share your location</string>
+    <string name="action_change_setting">Change Setting</string>
 </resources>

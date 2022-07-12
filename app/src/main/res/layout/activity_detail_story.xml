@@ -7,6 +7,16 @@
     android:orientation="vertical"
     tools:context=".presentation.story.detail.DetailStoryActivity">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/detailToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorDarkBlue"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:titleTextColor="@color/white" />
+
     <ImageView
         android:id="@+id/imgStoryThumbnail"
         android:layout_width="match_parent"

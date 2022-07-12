@@ -1,7 +1,9 @@
 package com.elapp.storyapp.data.repository
 
 import androidx.paging.AsyncPagingDataDiffer
+import androidx.paging.ExperimentalPagingApi
 import androidx.recyclerview.widget.ListUpdateCallback
+import com.elapp.storyapp.data.local.StoryAppDatabase
 import com.elapp.storyapp.data.remote.ApiResponse
 import com.elapp.storyapp.data.remote.story.GetStoriesResponse
 import com.elapp.storyapp.data.remote.story.StoryService
@@ -16,7 +18,6 @@ import com.elapp.storyapp.utils.DataDummy.multipartFileDummy
 import com.elapp.storyapp.utils.PagedTestDataSource
 import com.elapp.storyapp.utils.ext.toBearerToken
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.runBlocking
 import org.junit.*
@@ -24,14 +25,17 @@ import org.junit.runner.*
 import org.mockito.*
 import org.mockito.Mockito.*
 import org.mockito.junit.*
-import java.lang.Exception
 
+@ExperimentalPagingApi
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class StoryRepositoryTest {
 
     @get:Rule
     var coroutineRuleTest = CoroutinesTestRule()
+
+    @Mock
+    private lateinit var storyDatabase: StoryAppDatabase
 
     private lateinit var apiService: StoryService
 
@@ -55,8 +59,9 @@ class StoryRepositoryTest {
     @Before
     fun setUp() {
         apiService = mock(StoryService::class.java)
+        storyDatabase = mock(StoryAppDatabase::class.java)
 
-        storyDataSource = StoryDataSource(apiService)
+        storyDataSource = StoryDataSource(storyDatabase, apiService)
         storyDataSourceMock = mock(StoryDataSource::class.java)
 
         storyRepository = mock(StoryRepository::class.java)
@@ -126,14 +131,18 @@ class StoryRepositoryTest {
             apiService.addNewStories(
                 dataDummyToken.toBearerToken(),
                 dummyFile,
-                dummyDescription
+                dummyDescription,
+                null,
+                null
             )
         ).thenReturn(expectedResult)
 
         storyRepositoryMock.addNewStory(
             dataDummyToken.toBearerToken(),
             dummyFile,
-            dummyDescription
+            dummyDescription,
+            null,
+            null
         ).collect { result ->
             when (result) {
                 is ApiResponse.Success -> {
@@ -145,18 +154,22 @@ class StoryRepositoryTest {
         verify(apiService).addNewStories(
             dataDummyToken.toBearerToken(),
             dummyFile,
-            dummyDescription
+            dummyDescription,
+            null,
+            null
         )
     }
 
     @Test
     fun `Upload image file_getException`(): Unit = runBlocking {
         `when`(
-            apiService.addNewStories(dataDummyToken, dummyFile, dummyDescription)
+            apiService.addNewStories(
+                dataDummyToken.toBearerToken(), dummyFile, dummyDescription, null, null
+            )
         ).then { throw Exception() }
 
-        storyRepository.addNewStory(dataDummyToken, dummyFile, dummyDescription).collect { result ->
-            when(result) {
+        storyRepositoryMock.addNewStory(dataDummyToken.toBearerToken(), dummyFile, dummyDescription, null, null).collect { result ->
+            when (result) {
                 is ApiResponse.Error -> {
                     Assert.assertNotNull(result)
                 }
@@ -165,7 +178,9 @@ class StoryRepositoryTest {
         verify(apiService).addNewStories(
             dataDummyToken.toBearerToken(),
             dummyFile,
-            dummyDescription
+            dummyDescription,
+            null,
+            null
         )
     }
 

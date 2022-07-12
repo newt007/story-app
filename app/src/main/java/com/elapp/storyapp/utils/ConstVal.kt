@@ -24,7 +24,7 @@ object ConstVal {
 
     // Paging config
     const val INITIAL_PAGE_INDEX = 1
-    const val DEFAULT_PAGE_SIZE = 5
+    const val DEFAULT_PAGE_SIZE = 30
 
     // API Config for testing purpose
     var API_BASE_URL = "https://story-api.dicoding.dev/v1/"

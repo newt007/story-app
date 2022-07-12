@@ -47,4 +47,16 @@
     <string name="message_register_success">Register Berhasil</string>
     <string name="message_pick_image">Pilih gambar</string>
     <string name="error_desc_empty">Deskripsi tidak boleh kosong</string>
+    <string name="title_activity_story_map">StoryMapActivity</string>
+    <string name="menu_maps">Maps</string>
+    <string name="title_story_maps">Story Maps</string>
+    <string name="message_loading_map">Loading map....</string>
+    <string name="message_register_failed">Daftar Gagal, Coba lagi</string>
+    <string name="error_style_parsing">Style parsing failed.</string>
+    <string name="error_cant_find_style">\"Can\'t find style. Error: \"</string>
+    <string name="message_error_stories">Story tidak ditemukan</string>
+    <string name="action_retry">Coba lagi</string>
+    <string name="message_location_not_found">Lokasi tidak ditemukan. Coba lagi</string>
+    <string name="label_share_location">Bagikan lokasi anda</string>
+    <string name="action_change_setting">Ganti Pengaturan</string>
 </resources>

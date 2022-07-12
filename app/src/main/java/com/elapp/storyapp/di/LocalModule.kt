@@ -3,6 +3,7 @@ package com.elapp.storyapp.di
 import android.content.Context
 import androidx.room.Room
 import com.elapp.storyapp.data.local.StoryAppDatabase
+import com.elapp.storyapp.data.local.dao.RemoteKeysDao
 import com.elapp.storyapp.data.local.dao.StoryDao
 import com.elapp.storyapp.utils.ConstVal.DB_NAME
 import dagger.Module
@@ -26,5 +27,8 @@ class LocalModule {
 
     @Provides
     fun provideStoryDao(database: StoryAppDatabase): StoryDao = database.getStoryDao()
+
+    @Provides
+    fun provideRemoteKeyDao(database: StoryAppDatabase): RemoteKeysDao = database.getRemoteKeysDao()
 
 }
